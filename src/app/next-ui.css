@@ -1,0 +1,116 @@
+.pillar-trigger {
+  width: 100%;
+  padding: 22px 0;
+  display: flex;
+  align-items: center;
+  gap: 19px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  color: var(--ink);
+  font-family: "Manrope", Arial;
+  font-weight: 650;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+.pillar-trigger > .icon {
+  color: var(--blue);
+  width: 28px;
+  height: 28px;
+}
+.pillar-trigger > span:first-of-type {
+  flex: 1;
+}
+.pillar-trigger small {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+.pillar.is-open .plus {
+  color: var(--blue);
+}
+.login-card {
+  max-width: 520px;
+  margin: auto;
+  padding: 35px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.login-card h1 {
+  font-size: 2rem;
+}
+.login-card .button {
+  margin-top: 25px;
+}
+.login-card p {
+  color: var(--text);
+}
+.admin-session {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-bottom: 22px;
+}
+.field-help {
+  font-size: 0.85rem;
+  color: var(--text);
+}
+.live-feedback {
+  min-height: 1.7rem;
+  white-space: pre-wrap;
+  color: var(--blue);
+  overflow-wrap: anywhere;
+}
+.help-panel {
+  margin-top: 25px;
+  padding: 18px;
+  background: var(--pale);
+}
+.help-panel p {
+  margin: 0;
+}
+.history .report-detail p {
+  white-space: pre-wrap;
+}
+.product-info small {
+  font-size: 0.9rem;
+}
+.status-error {
+  color: #a52929;
+}
+.status-success {
+  color: #336918;
+}
+.editor-card .reference {
+  font-size: 0.9rem;
+}
+.admin-toolbar select {
+  max-width: 240px;
+}
+.admin-intro h1 {
+  margin-bottom: 15px;
+}
+.panel-loading {
+  padding: 35px;
+  text-align: center;
+}
+.table-wrap table {
+  min-width: 800px;
+}
+.table-wrap:focus-visible {
+  outline: 2px solid var(--blue);
+}
+@media (max-width: 600px) {
+  .login-card {
+    padding: 25px;
+  }
+  .admin-session {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .pillar-trigger {
+    font-size: 0.95rem;
+    padding: 20px 0;
+  }
+}

@@ -1,0 +1,51 @@
+export const defaultCatalog = [
+  {
+    id: "pota",
+    name: "Pota",
+    category: "directo",
+    description: "Producto congelado para consumo humano directo.",
+    details: "Consulta presentaciones y disponibilidad con Exalmar.",
+    version: 0,
+  },
+  {
+    id: "jurel",
+    name: "Jurel",
+    category: "directo",
+    description: "Pescado congelado para consumo humano directo.",
+    details: "Consulta presentaciones y disponibilidad con Exalmar.",
+    version: 0,
+  },
+  {
+    id: "caballa",
+    name: "Caballa",
+    category: "directo",
+    description: "Pescado congelado para consumo humano directo.",
+    details: "Consulta presentaciones y disponibilidad con Exalmar.",
+    version: 0,
+  },
+  {
+    id: "anchoveta",
+    name: "Anchoveta",
+    category: "directo",
+    description: "Producto marino de la línea de congelados.",
+    details: "Consulta presentaciones y disponibilidad con Exalmar.",
+    version: 0,
+  },
+  {
+    id: "harina",
+    name: "Harina de pescado",
+    category: "indirecto",
+    description: "Ingrediente destinado a nutrición animal y acuicultura.",
+    details: "Las especificaciones dependen de la categoría comercial.",
+    version: 0,
+  },
+  {
+    id: "aceite",
+    name: "Aceite de pescado",
+    category: "indirecto",
+    description:
+      "Ingrediente de origen marino para distintas aplicaciones de nutrición.",
+    details: "Consulta las especificaciones de la línea comercial.",
+    version: 0,
+  },
+];
