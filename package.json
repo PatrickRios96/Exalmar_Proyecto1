@@ -1,28 +1,20 @@
 {
   "name": "exalmar-nextjs",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22.13.0"
+    "node": "24.x"
   },
   "scripts": {
-    "predev": "node scripts/setup-local.mjs",
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
-    "start": "next start",
+    "vercel-build": "next build",
     "typecheck": "tsc --noEmit",
-    "db:migrate": "node scripts/migrate.mjs",
-    "db:migrate:local": "node scripts/migrate.mjs --local",
-    "admin:info": "node scripts/admin-info.mjs",
     "test": "node --import tsx --test tests/*.test.ts",
-    "vercel-build": "node scripts/check-production.mjs && npm run db:migrate && npm run build",
-    "test:local": "node tests/local-flow.mjs",
-    "test:integration": "node scripts/setup-local.mjs && node tests/run-local-server.mjs",
-    "format": "prettier --write src scripts tests *.ts *.json *.md"
+    "format": "prettier --write src tests *.ts *.json *.md"
   },
   "dependencies": {
-    "@libsql/client": "0.18.0",
     "lucide-react": "^0.468.0",
     "next": "16.4.6",
     "react": "19.2.6",

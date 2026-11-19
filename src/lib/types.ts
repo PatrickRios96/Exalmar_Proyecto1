@@ -24,8 +24,3 @@ export interface ReportRecord {
   updated_at: string;
   version: number;
 }
-export interface Me {
-  admin: boolean;
-  name: string;
-  email: string;
-}

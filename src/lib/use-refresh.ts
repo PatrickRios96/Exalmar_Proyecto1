@@ -10,17 +10,15 @@ export function useAutoRefresh(callback: () => void, enabled = true) {
     };
     const timer = setInterval(refresh, 15000);
     window.addEventListener("focus", refresh);
+    window.addEventListener("storage", refresh);
+    window.addEventListener("exalmar-updates", refresh);
     document.addEventListener("visibilitychange", refresh);
-    let channel: BroadcastChannel | undefined;
-    try {
-      channel = new BroadcastChannel("exalmar-updates");
-      channel.onmessage = refresh;
-    } catch {}
     return () => {
       clearInterval(timer);
       window.removeEventListener("focus", refresh);
+      window.removeEventListener("storage", refresh);
+      window.removeEventListener("exalmar-updates", refresh);
       document.removeEventListener("visibilitychange", refresh);
-      channel?.close();
     };
   }, [enabled]);
 }

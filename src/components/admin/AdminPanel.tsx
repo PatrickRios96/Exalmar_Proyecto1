@@ -1,13 +1,18 @@
 "use client";
+import {
+  getProducts,
+  getReports,
+  updateReport as saveReportChanges,
+  updateProduct as saveProductChanges,
+} from "@/lib/browser-store";
 import Link from "next/link";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import { api, formatDate, signalUpdate } from "@/lib/client";
+
+import { formatDate, signalUpdate } from "@/lib/client";
 import { useAutoRefresh } from "@/lib/use-refresh";
 import type { Product, ReportRecord } from "@/lib/types";
 import Icon from "../ui/Icon";
 export default function AdminPanel() {
-  const router = useRouter();
   const [tab, setTab] = useState<"reports" | "catalog">("reports"),
     [reports, setReports] = useState<ReportRecord[]>([]),
     [products, setProducts] = useState<Product[]>([]),
@@ -20,13 +25,12 @@ export default function AdminPanel() {
   const [reportDraft, setReportDraft] = useState<ReportRecord | null>(null),
     [productDraft, setProductDraft] = useState<Product | null>(null);
   const loadReports = useCallback(async () => {
-    const data = await api<{ reports: ReportRecord[] }>("/api/admin/reports");
-    setReports(data.reports);
+    setReports(getReports());
   }, []);
   const loadCatalog = useCallback(async () => {
-    const data = await api<{ products: Product[] }>("/api/catalog");
-    setProducts(data.products);
-    return data.products;
+    const catalog = getProducts();
+    setProducts(catalog);
+    return catalog;
   }, []);
   useEffect(() => {
     Promise.all([loadReports(), loadCatalog()])
@@ -53,18 +57,15 @@ export default function AdminPanel() {
     setBusy(true);
     setError("");
     try {
-      await api("/api/admin/reports", {
-        method: "PATCH",
-        body: JSON.stringify({
-          id: reportDraft.id,
-          status: reportDraft.status,
-          response: reportDraft.response,
-          version: reportDraft.version,
-        }),
+      saveReportChanges({
+        id: reportDraft.id,
+        status: reportDraft.status,
+        response: reportDraft.response,
+        version: reportDraft.version,
       });
       setReportDraft(null);
       setFeedback(
-        "Solicitud actualizada. El nuevo estado y la respuesta ya están disponibles para el solicitante.",
+        "Solicitud local actualizada. Puedes revisar el resultado en Soporte desde este navegador.",
       );
       await loadReports();
       signalUpdate();
@@ -80,19 +81,16 @@ export default function AdminPanel() {
     setBusy(true);
     setError("");
     try {
-      await api("/api/admin/catalog", {
-        method: "PUT",
-        body: JSON.stringify({
-          id: productDraft.id,
-          description: productDraft.description,
-          details: productDraft.details,
-          version: productDraft.version,
-        }),
+      saveProductChanges({
+        id: productDraft.id,
+        description: productDraft.description,
+        details: productDraft.details,
+        version: productDraft.version,
       });
       const updated = await loadCatalog();
       setProductDraft(updated.find((p) => p.id === productDraft.id)!);
       setFeedback(
-        "Cambios guardados y publicados. Las páginas abiertas se sincronizan automáticamente.",
+        "Cambios guardados en este navegador. Inicio y Soporte se actualizan localmente.",
       );
       signalUpdate();
     } catch (err) {
@@ -101,30 +99,23 @@ export default function AdminPanel() {
       setBusy(false);
     }
   }
-  async function logout() {
-    try {
-      await api("/api/auth/logout", { method: "POST", body: "{}" });
-      router.replace("/admin/login");
-      router.refresh();
-    } catch (err) {
-      setError((err as Error).message);
-    }
-  }
   return (
     <section className="shell section admin-section">
-      <div className="admin-session">
-        <span className="muted">Sesión de administración</span>
-        <button className="small-button" onClick={logout}>
-          Cerrar sesión
-        </button>
+      <div className="demo-notice">
+        <strong>Panel local de demostración</strong>
+        <p>
+          Sin autenticación ni datos compartidos. Solo puedes ver y modificar lo
+          guardado en este navegador. Los cambios no se publican para otros
+          visitantes.
+        </p>
       </div>
       <div className="admin-intro">
         <div>
           <span className="eyebrow">ADMINISTRACIÓN</span>
           <h1>Productos y solicitudes.</h1>
           <p>
-            Gestiona reportes y actualiza la información que se muestra en la
-            web.
+            Prueba la gestión de reportes y la edición de productos con datos
+            locales.
           </p>
         </div>
         <Link className="button blue" href="/soporte">
@@ -195,9 +186,7 @@ export default function AdminPanel() {
               Actualizar
             </button>
           </div>
-          <p className="muted">
-            {visible.length} solicitudes · hasta 500 registros recientes
-          </p>
+          <p className="muted">{visible.length} solicitudes locales</p>
           {visible.length ? (
             <div
               className="table-wrap"
@@ -317,8 +306,8 @@ export default function AdminPanel() {
       ) : (
         <>
           <p className="muted">
-            Al guardar, la información se refleja en Inicio y Soporte. Las
-            páginas abiertas se sincronizan cada 15 segundos.
+            Al guardar, la información se refleja en Inicio y Soporte de este
+            navegador. No se comparte entre dispositivos.
           </p>
           <div className="catalog-editor-grid">
             <nav aria-label="Seleccionar producto">
@@ -375,7 +364,7 @@ export default function AdminPanel() {
                   Publica solo información validada por Exalmar.
                 </p>
                 <button className="button blue" disabled={busy}>
-                  {busy ? "Guardando…" : "Guardar y publicar cambios"}
+                  {busy ? "Guardando…" : "Guardar cambios locales"}
                 </button>
               </form>
             )}

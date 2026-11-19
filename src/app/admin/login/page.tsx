@@ -1,12 +1,19 @@
-import { redirect } from "next/navigation";
-import { isAdmin } from "@/lib/auth";
-import LoginForm from "@/components/admin/LoginForm";
-export const dynamic = "force-dynamic";
+import Link from "next/link";
 export const metadata = {
-  title: "Ingreso de administración",
+  title: "Panel de demostración",
   robots: { index: false, follow: false },
 };
-export default async function Login() {
-  if (await isAdmin()) redirect("/admin");
-  return <LoginForm />;
+export default function Login() {
+  return (
+    <section className="section shell">
+      <h1>Panel local de demostración</h1>
+      <p>
+        Esta versión funciona sin servidor de datos y no requiere contraseña.
+        Los cambios se guardan solo en este navegador.
+      </p>
+      <Link className="button blue" href="/admin">
+        Abrir panel local
+      </Link>
+    </section>
+  );
 }

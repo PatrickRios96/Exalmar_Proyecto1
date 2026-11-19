@@ -1,4 +1,6 @@
 "use client";
+import { getProducts, getReports, saveReport } from "@/lib/browser-store";
+
 import Link from "next/link";
 import {
   useCallback,
@@ -8,7 +10,7 @@ import {
   type FormEvent,
 } from "react";
 import Icon from "../ui/Icon";
-import { api, formatDate, signalUpdate } from "@/lib/client";
+import { formatDate, signalUpdate } from "@/lib/client";
 import { useAutoRefresh } from "@/lib/use-refresh";
 import type { Product, ReportRecord } from "@/lib/types";
 export default function SupportPortal({
@@ -28,12 +30,8 @@ export default function SupportPortal({
   const current = products.find((p) => p.id === product);
   const load = useCallback(async () => {
     try {
-      const [catalog, history] = await Promise.all([
-        api<{ products: Product[] }>("/api/catalog"),
-        api<{ reports: ReportRecord[] }>("/api/reports"),
-      ]);
-      setProducts(catalog.products);
-      setReports(history.reports);
+      setProducts(getProducts());
+      setReports(getReports());
       setError("");
     } catch (err) {
       setError((err as Error).message);
@@ -42,24 +40,12 @@ export default function SupportPortal({
     }
   }, []);
   useEffect(() => {
-    let alive = true;
-    api("/api/me")
-      .then(() => {
-        if (alive) void load();
-      })
-      .catch((err) => {
-        if (alive) {
-          setError(err.message);
-          setLoading(false);
-        }
-      });
-    return () => {
-      alive = false;
-    };
-  }, [load]);
-  useEffect(() => {
-    setProduct(initialProduct);
-  }, [initialProduct]);
+    void load();
+    setProduct(
+      new URLSearchParams(window.location.search).get("producto") ||
+        initialProduct,
+    );
+  }, [load, initialProduct]);
   useAutoRefresh(load);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -67,17 +53,14 @@ export default function SupportPortal({
     setFeedback("Guardando solicitud…");
     const data = new FormData(event.currentTarget);
     try {
-      const result = await api<{ id: string }>("/api/reports", {
-        method: "POST",
-        body: JSON.stringify({
-          ...Object.fromEntries(data),
-          consent: data.get("consent") === "on",
-        }),
+      const result = saveReport({
+        ...Object.fromEntries(data),
+        consent: data.get("consent") === "on",
       });
       form.current?.reset();
       setProduct("");
       setFeedback(
-        `Solicitud guardada correctamente. Código: ${result.id}. Consulta su estado en Mis solicitudes.`,
+        `Solicitud guardada en este navegador. Código: ${result.id}. Consulta su estado en Mis solicitudes.`,
       );
       await load();
       signalUpdate();
@@ -115,8 +98,9 @@ export default function SupportPortal({
         <form ref={form} onSubmit={submit}>
           <h2>Registrar solicitud</h2>
           <p className="muted">
-            Los campos con * son obligatorios. Tu solicitud quedará guardada en
-            este portal.
+            Los campos con * son obligatorios. Este formulario de demostración
+            guarda los datos únicamente en este navegador; no los envía a
+            Exalmar.
           </p>
           <div className="form-row">
             <label>
@@ -208,8 +192,8 @@ export default function SupportPortal({
           <label className="checkbox">
             <input name="consent" type="checkbox" required />
             <span>
-              Autorizo el registro de mis datos para atender esta solicitud. He
-              revisado la{" "}
+              Acepto guardar estos datos en mi navegador para probar este
+              formulario. He revisado la{" "}
               <a
                 href="https://www.exalmar.com.pe/politica-de-privacidad/"
                 target="_blank"
@@ -229,7 +213,7 @@ export default function SupportPortal({
             disabled={busy || !products.length}
           >
             <Icon name="check" />
-            {busy ? "Guardando…" : "Guardar solicitud"}
+            {busy ? "Guardando…" : "Guardar solicitud local"}
           </button>
         </form>
         <section className="history">

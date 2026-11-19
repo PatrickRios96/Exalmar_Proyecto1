@@ -64,7 +64,7 @@ export const faqs = [
   {
     category: "Soporte",
     q: "¿Cómo puedo solicitar soporte desde este portal?",
-    a: "Completa el formulario de Soporte para guardar tu reporte de calidad o consulta sobre un producto. El código, estado y respuesta quedan disponibles en Mis solicitudes. También puedes escribir a prios@exalmar.com.pe.",
+    a: "Completa el formulario de Soporte para guardar tu reporte de calidad o consulta sobre un producto. Los datos quedan en este navegador como demostración. No se envían al equipo de Exalmar. El código, estado y respuesta locales se ven en Mis solicitudes. También puedes escribir a prios@exalmar.com.pe.",
   },
   {
     category: "Soporte",

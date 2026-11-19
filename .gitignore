@@ -8,3 +8,6 @@ data/
 coverage/
 .next-integration/
 .local-dev.log
+
+out/
+.format-log.txt

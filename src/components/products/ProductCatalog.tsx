@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/client";
+import { getProducts } from "@/lib/browser-store";
 import { useAutoRefresh } from "@/lib/use-refresh";
 import type { Product } from "@/lib/types";
 import Icon from "../ui/Icon";
@@ -10,8 +10,7 @@ export default function ProductCatalog() {
     [error, setError] = useState("");
   const load = useCallback(async () => {
     try {
-      const data = await api<{ products: Product[] }>("/api/catalog");
-      setProducts(data.products);
+      setProducts(getProducts());
       setError("");
     } catch (err) {
       setError((err as Error).message);

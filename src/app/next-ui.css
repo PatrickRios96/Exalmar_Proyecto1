@@ -114,3 +114,15 @@
     padding: 20px 0;
   }
 }
+
+.demo-notice {
+  padding: 20px 24px;
+  background: #edf5fa;
+  border: 1px solid #c2d9e7;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+.demo-notice p {
+  margin: 8px 0 0;
+  color: var(--text);
+}

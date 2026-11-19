@@ -3,18 +3,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import Icon from "../ui/Icon";
-import { api } from "@/lib/client";
-import type { Me } from "@/lib/types";
+
 export default function Header() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false),
-    [admin, setAdmin] = useState(false);
+  const [open, setOpen] = useState(false);
   const button = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    api<Me>("/api/me")
-      .then((me) => setAdmin(me.admin))
-      .catch(() => {});
-  }, [pathname]);
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -60,7 +53,7 @@ export default function Header() {
               ["/nosotros", "Nosotros"],
               ["/faq", "FAQ"],
               ["/soporte", "Soporte"],
-              ...(admin ? [["/admin", "Administración"]] : []),
+              ["/admin", "Administración"],
             ].map(([href, text]) => (
               <Link
                 href={href}
